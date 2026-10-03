@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 from datetime import date
+from pathlib import Path
 
 
 # --------------------------------------------------
@@ -20,13 +21,15 @@ st.set_page_config(
 # LOAD MODELS
 # --------------------------------------------------
 
-temperature_model = joblib.load(
-    "models/temperature_model.pkl"
-)
+@st.cache_resource
+def load_models():
+    model_dir = Path(__file__).resolve().parent / "models"
+    temperature = joblib.load(model_dir / "temperature_model.pkl")
+    rain = joblib.load(model_dir / "rain_model.pkl")
+    return temperature, rain
 
-rain_model = joblib.load(
-    "models/rain_model.pkl"
-)
+
+temperature_model, rain_model = load_models()
 
 
 # --------------------------------------------------
